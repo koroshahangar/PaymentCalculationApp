@@ -1,0 +1,35 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    container_name: 'backend'
+    environment: 
+      PORT: 3001
+      # this is the API key used in TaxJar documentation
+      # please substitue this value with your own API key
+      TAX_JAR_API_KEY: '9e0cd62a22f451701f29c3bde214'
+    ports:
+      - 8080:3001
+    depends_on:
+      - db
+  frontend:
+    build: ./payment-calc
+    container_name: 'frontend'
+    environment: 
+      PORT: 3002
+      # frontend uses localhost (not Docker network) to talk to backend
+      BACKEND_URL: localhost
+      BACKEND_PORT: 8080
+    ports:
+      - 3000:3002
+    depends_on:
+      - backend
+  db:
+    image: mongo:latest
+    container_name: 'db'
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - data:/data/db
+# volumes:
+#   data:
